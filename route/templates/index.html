@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Home
+{% endblock %}
+
+{% block body %}
+<br><br><br>
+<div class="container">
+    <div class="table-responsive">
+        <h3 style="text-align:center;">Router Details</h3>
+        <a href="/create" class="btn btn-primary"> + Add Router</a>
+        <table class="table">
+            <thead class="" style="background: #ec8327;color: #fff;">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Sap Id</th>
+                    <th scope="col">Hostname</th>
+                    <th scope="col">Loopback</th>
+                    <th scope="col">Mac Address</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody class="router_list">
+                {% for route in router %}
+                <tr class="card{{ route.id }}">
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ route.sapId }}</td>
+                    <td>{{ route.hostname }}</td>
+                    <td>{{ route.loopback }}</td>
+                    <td>{{ route.macAddress }}</td>
+                    <td>
+                        <a href="/update/{{ route.id }}/" class="btn btn-warning"> Update </a>
+                        <a id="delet{{ route.id }}" class="btn btn-danger popwlclose"> Delete </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <form>{% csrf_token %}</form>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script type="text/javascript">
+    $('.router_list').on('click', 'a.popwlclose', function(){
+        var csrfToken = $('input[name=csrfmiddlewaretoken]').val();
+        a = this.id.slice(5, );
+        $('.card'+ a +'').remove();
+
+        $.ajax({
+            url : '/delete/',
+            data : {
+                csrfmiddlewaretoken : csrfToken,
+                id : a
+            },
+            type : 'POST',
+            success : function(){ 
+            }
+        });
+    });
+</script>
+
+{% endblock js %}
